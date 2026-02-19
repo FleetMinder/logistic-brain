@@ -15,16 +15,18 @@ import {
     ChevronRight,
     Brain,
     AlertTriangle,
+    Sparkles,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 const navItems = [
-    { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-    { href: "/viaggi", label: "Viaggi", icon: Route },
-    { href: "/autisti", label: "Autisti", icon: Users },
-    { href: "/veicoli", label: "Veicoli", icon: Truck },
-    { href: "/documenti", label: "Documenti", icon: FileText },
-    { href: "/benessere", label: "Benessere", icon: Heart },
+    { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard, ai: false },
+    { href: "/viaggi", label: "Viaggi", icon: Route, ai: false },
+    { href: "/ai-dispatch", label: "AI Dispatch", icon: Sparkles, ai: true },
+    { href: "/autisti", label: "Autisti", icon: Users, ai: false },
+    { href: "/veicoli", label: "Veicoli", icon: Truck, ai: false },
+    { href: "/documenti", label: "Documenti", icon: FileText, ai: false },
+    { href: "/benessere", label: "Benessere", icon: Heart, ai: false },
 ]
 
 const bottomNavItems = [
@@ -70,22 +72,38 @@ export function Sidebar() {
                             href={item.href}
                             className={cn(
                                 "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 group",
-                                isActive
-                                    ? "bg-sidebar-primary/15 text-sidebar-primary border border-sidebar-primary/20"
-                                    : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground",
+                                item.ai
+                                    ? isActive
+                                        ? "bg-violet-500/20 text-violet-300 border border-violet-500/30"
+                                        : "text-violet-400/80 hover:bg-violet-500/10 hover:text-violet-300 border border-transparent hover:border-violet-500/20"
+                                    : isActive
+                                        ? "bg-sidebar-primary/15 text-sidebar-primary border border-sidebar-primary/20"
+                                        : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground",
                                 collapsed && "justify-center px-2"
                             )}
                             title={collapsed ? item.label : undefined}
                         >
                             <Icon className={cn(
                                 "w-5 h-5 flex-shrink-0 transition-colors",
-                                isActive ? "text-sidebar-primary" : "text-sidebar-foreground/50 group-hover:text-sidebar-foreground"
+                                item.ai
+                                    ? isActive ? "text-violet-300" : "text-violet-400/70 group-hover:text-violet-300"
+                                    : isActive ? "text-sidebar-primary" : "text-sidebar-foreground/50 group-hover:text-sidebar-foreground"
                             )} />
                             {!collapsed && (
-                                <span className="animate-fade-in">{item.label}</span>
+                                <span className="animate-fade-in flex items-center gap-1.5">
+                                    {item.label}
+                                    {item.ai && !isActive && (
+                                        <span className="text-[9px] font-bold px-1 py-0.5 rounded bg-violet-500/20 text-violet-400 border border-violet-500/20 leading-none">
+                                            AI
+                                        </span>
+                                    )}
+                                </span>
                             )}
                             {isActive && !collapsed && (
-                                <div className="ml-auto w-1.5 h-1.5 rounded-full bg-sidebar-primary" />
+                                <div className={cn(
+                                    "ml-auto w-1.5 h-1.5 rounded-full",
+                                    item.ai ? "bg-violet-400" : "bg-sidebar-primary"
+                                )} />
                             )}
                         </Link>
                     )
